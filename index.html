@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel Planning Agent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">✦</span><span>TripPilot <small>TRAVEL AGENT</small></span></a>
+    <span class="top-pill"><span class="live-dot"></span> AI planning demo</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR PERSONAL TRAVEL ASSISTANT</p>
+        <h1>Plan less.<br><span>Explore more.</span></h1>
+        <p class="hero-description">Build a thoughtful itinerary, check your budget, compare alternatives, and refine the plan until it fits your constraints.</p>
+        <div class="hero-features">
+          <span>✓ Smart planning</span><span>✓ Budget checks</span><span>✓ Iterative refinement</span>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="Mountain travel illustration">
+        <div class="sun"></div><div class="mountain mountain-back"></div><div class="mountain mountain-front"></div>
+        <div class="lake"></div><div class="art-label"><span>✦</span> Your next adventure starts here</div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel input-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">STEP 01</p><h2>Your trip details</h2></div>
+          <span class="heading-icon">⌁</span>
+        </div>
+        <form id="tripForm">
+          <label for="destination">Destination</label>
+          <input id="destination" name="destination" value="Ooty" required placeholder="e.g. Ooty" />
+
+          <div class="field-grid">
+            <div><label for="startDate">Start date</label><input id="startDate" type="date" required /></div>
+            <div><label for="endDate">End date</label><input id="endDate" type="date" required /></div>
+          </div>
+
+          <label for="budget">Total budget (₹)</label>
+          <div class="input-prefix"><span>₹</span><input id="budget" type="number" min="1" value="10000" required /></div>
+
+          <label>Interests <span class="muted">(choose any)</span></label>
+          <div class="interest-options">
+            <label class="interest"><input type="checkbox" name="interest" value="Nature" checked /><span>🌿 Nature</span></label>
+            <label class="interest"><input type="checkbox" name="interest" value="Sightseeing" checked /><span>📸 Sightseeing</span></label>
+            <label class="interest"><input type="checkbox" name="interest" value="Adventure" /><span>🥾 Adventure</span></label>
+            <label class="interest"><input type="checkbox" name="interest" value="History" /><span>🏛️ History</span></label>
+            <label class="interest"><input type="checkbox" name="interest" value="Food" /><span>🍜 Food</span></label>
+            <label class="interest"><input type="checkbox" name="interest" value="Shopping" /><span>🛍️ Shopping</span></label>
+          </div>
+
+          <label for="travellers">Number of travellers</label>
+          <div class="stepper">
+            <button type="button" id="minusBtn" aria-label="Decrease travellers">−</button>
+            <input id="travellers" type="number" min="1" max="20" value="2" required />
+            <button type="button" id="plusBtn" aria-label="Increase travellers">+</button>
+            <span class="muted">people</span>
+          </div>
+          <button class="primary-button" type="submit"><span>✦</span> Generate itinerary <span>→</span></button>
+          <button class="secondary-button" type="button" id="demoBtn">Load practical demo values</button>
+        </form>
+        <p class="disclaimer">Costs are illustrative estimates for a lab demonstration, not live quotes or confirmed bookings.</p>
+      </aside>
+
+      <section class="results-column" aria-live="polite">
+        <div id="emptyState" class="panel empty-state">
+          <div class="empty-icon">✦</div><h2>Your itinerary will appear here</h2>
+          <p>Enter your trip details and generate a plan to see budget validation, alternatives, and iterative refinement.</p>
+          <div class="mini-steps"><span>01 Plan</span><b>→</b><span>02 Check</span><b>→</b><span>03 Compare</span><b>→</b><span>04 Refine</span></div>
+        </div>
+        <div id="results" class="hidden">
+          <div class="result-heading">
+            <div><p class="eyebrow">YOUR TRIP BLUEPRINT</p><h2 id="resultTitle">Ooty, thoughtfully planned</h2><p id="resultSubtitle" class="muted"></p></div>
+            <span class="status-pill" id="statusPill">Ready</span>
+          </div>
+          <div class="metrics">
+            <article class="metric-card"><span class="metric-icon purple">₹</span><span class="metric-label">Final estimated cost</span><strong id="finalCost">₹9,500</strong><small id="costPerPerson">₹4,750 per person</small></article>
+            <article class="metric-card"><span class="metric-icon green">✓</span><span class="metric-label">Budget remaining</span><strong id="remaining">₹500</strong><small id="budgetUsage">95% of budget used</small></article>
+            <article class="metric-card"><span class="metric-icon orange">↻</span><span class="metric-label">Refinement rounds</span><strong id="rounds">1</strong><small>Constraint checks completed</small></article>
+          </div>
+
+          <section class="panel result-panel">
+            <div class="section-title"><div><p class="eyebrow">STEP 02</p><h3>Initial plan & constraint check</h3></div><span class="section-symbol">⌕</span></div>
+            <div id="initialCostBox" class="initial-cost-box"></div>
+            <div id="constraintList" class="constraint-list"></div>
+          </section>
+
+          <section class="panel result-panel">
+            <div class="section-title"><div><p class="eyebrow">STEP 03</p><h3>Compare alternatives</h3></div><span class="section-symbol">⇄</span></div>
+            <p class="section-description">The agent compares realistic planning choices and selects an option that better satisfies the constraints.</p>
+            <div class="table-wrap"><table><thead><tr><th>Option</th><th>Estimated cost</th><th>Trade-off</th><th>Decision</th></tr></thead><tbody id="comparisonRows"></tbody></table></div>
+          </section>
+
+          <section class="panel result-panel">
+            <div class="section-title"><div><p class="eyebrow">STEP 04</p><h3>Refined day-wise itinerary</h3></div><span class="section-symbol">⌖</span></div>
+            <div id="itineraryDays" class="itinerary-days"></div>
+          </section>
+
+          <section class="panel result-panel">
+            <div class="section-title"><div><p class="eyebrow">FINAL CHECK</p><h3>Final budget breakdown</h3></div><span class="section-symbol">₹</span></div>
+            <div id="budgetBreakdown" class="budget-breakdown"></div>
+            <div class="budget-total"><span>Total estimated cost</span><strong id="breakdownTotal"></strong></div>
+            <div class="budget-total remaining-row"><span>Remaining budget</span><strong id="breakdownRemaining"></strong></div>
+          </section>
+
+          <section class="panel result-panel summary-panel">
+            <div class="section-title"><div><p class="eyebrow">LAB DEMONSTRATION</p><h3>Four concepts demonstrated</h3></div></div>
+            <div class="concept-grid">
+              <article><span>01</span><h4>Planning</h4><p>Creates a day-wise schedule from destination, dates, interests, and group size.</p></article>
+              <article><span>02</span><h4>Constraint handling</h4><p>Checks the estimated cost against the budget and validates the trip duration.</p></article>
+              <article><span>03</span><h4>Comparison</h4><p>Compares accommodation and activity choices by cost and convenience.</p></article>
+              <article><span>04</span><h4>Iterative refinement</h4><p>Replaces expensive choices, recalculates totals, and checks the constraints again.</p></article>
+            </div>
+          </section>
+          <div class="action-row"><button class="secondary-button" id="regenerateBtn">↻ Refine with current inputs</button><button class="primary-button" id="printBtn">Print / Save result ↗</button></div>
+        </div>
+      </section>
+    </section>
+    <footer>TripPilot · Prompt Engineering Lab Practical <span>Planning • Constraints • Comparison • Refinement</span></footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
